@@ -1,0 +1,56 @@
+server:
+  port: 8443
+
+spring:
+  application:
+    name: VAULT-SERVICE
+  devtools:
+    add-properties: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:6001/vault_db?options=-c%20TimeZone=UTC
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  logging:
+    level:
+      com.umar: DEBUG
+
+
+  ssl:
+    enabled: true
+    key-store: classpath:vault-server.p12
+    key-store-password: ${VAULT_KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+
+    trust-store: classpath:vault-truststore.p12
+    trust-store-password: ${VAULT_TRUSTSTORE_PASSWORD}
+    trust-store-type: PKCS12
+
+    client-auth: need
+
+  vault:
+    kms:
+      provider: ${VAULT_KMS_PROVIDER:local}
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics
+
+    endpoint:
+      health:
+        show-details: always

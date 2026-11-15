@@ -1,0 +1,235 @@
+INSERT INTO data_class (
+    id,
+    name,
+    value_kind,
+    validation,
+    masking,
+    classification,
+    retention_group,
+    blind_index,
+    fpe,
+    detokenizable,
+    allowed_purposes,
+    version,
+    status
+)
+VALUES
+
+-- PHONE
+(
+    '20000000-0000-0000-0000-000000000001',
+    'PHONE',
+    'VALUE',
+    '{"type":"PHONE","format":"E164","maxLength":16}',
+    '{"strategy":"SHOW_LAST","characters":3}',
+    'CONFIDENTIAL',
+    'ERASABLE',
+    TRUE,
+    FALSE,
+    TRUE,
+    ARRAY[
+        'ACCOUNT_REGISTRATION',
+        'PHONE_LOOKUP',
+        'GROUP_INVITATION',
+        'DATA_EXPORT'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- ID NUMBER
+(
+    '20000000-0000-0000-0000-000000000002',
+    'ID_NUMBER',
+    'VALUE',
+    '{"type":"ALPHANUMERIC","maxLength":100}',
+    '{"strategy":"MASK_ALL"}',
+    'RESTRICTED',
+    'KYC_RETAIN',
+    TRUE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'KYC_SUBMISSION',
+        'KYC_REVIEW',
+        'DATA_EXPORT'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- LEGAL NAME
+(
+    '20000000-0000-0000-0000-000000000003',
+    'LEGAL_NAME',
+    'VALUE',
+    '{"type":"TEXT","maxLength":200}',
+    '{"strategy":"MASK_ALL"}',
+    'CONFIDENTIAL',
+    'KYC_RETAIN',
+    FALSE,
+    FALSE,
+    TRUE,
+    ARRAY[
+        'WALLET_NAME_MATCH',
+        'DATA_EXPORT'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- WALLET NUMBER
+(
+    '20000000-0000-0000-0000-000000000004',
+    'WALLET_NUMBER',
+    'VALUE',
+    '{"type":"ALPHANUMERIC","maxLength":100}',
+    '{"strategy":"SHOW_LAST","characters":3}',
+    'RESTRICTED',
+    'FINANCIAL_RETAIN',
+    TRUE,
+    FALSE,
+    TRUE,
+    ARRAY[
+        'WALLET_REGISTRATION',
+        'WALLET_LOOKUP',
+        'PAYOUT_DISBURSEMENT',
+        'DATA_EXPORT'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- PAYER PHONE
+(
+    '20000000-0000-0000-0000-000000000005',
+    'PAYER_PHONE',
+    'VALUE',
+    '{"type":"PHONE","format":"E164"}',
+    '{"strategy":"SHOW_LAST","characters":3}',
+    'CONFIDENTIAL',
+    'FINANCIAL_RETAIN',
+    TRUE,
+    FALSE,
+    TRUE,
+    ARRAY[
+        'PREMIUM_COLLECTION',
+        'PREMIUM_REFUND'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- SPONSOR BANK ACCOUNT
+(
+    '20000000-0000-0000-0000-000000000006',
+    'SPONSOR_BANK_ACCOUNT',
+    'VALUE',
+    '{"type":"BANK_ACCOUNT","maxLength":100}',
+    '{"strategy":"MASK_ALL"}',
+    'RESTRICTED',
+    'FINANCIAL_RETAIN',
+    FALSE,
+    FALSE,
+    TRUE,
+    ARRAY[
+        'PREMIUM_REFUND'
+    ],
+    1,
+    'ACTIVE'
+),
+
+-- DOCUMENT CLASSES
+(
+    '20000000-0000-0000-0000-000000000007',
+    'KYC_DOCUMENT',
+    'DOCUMENT',
+    '{"type":"DOCUMENT"}',
+    '{"strategy":"WATERMARK"}',
+    'RESTRICTED',
+    'KYC_RETAIN',
+    FALSE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'KYC_SUBMISSION',
+        'KYC_REVIEW'
+    ],
+    1,
+    'ACTIVE'
+),
+
+(
+    '20000000-0000-0000-0000-000000000008',
+    'SELFIE',
+    'DOCUMENT',
+    '{"type":"IMAGE"}',
+    '{"strategy":"WATERMARK"}',
+    'RESTRICTED',
+    'KYC_RETAIN',
+    FALSE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'KYC_SUBMISSION',
+        'KYC_REVIEW'
+    ],
+    1,
+    'ACTIVE'
+),
+
+(
+    '20000000-0000-0000-0000-000000000009',
+    'DISPUTE_EVIDENCE',
+    'DOCUMENT',
+    '{"type":"DOCUMENT"}',
+    '{"strategy":"WATERMARK"}',
+    'RESTRICTED',
+    'EVIDENCE_RETAIN',
+    FALSE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'CLAIM_DISPUTE'
+    ],
+    1,
+    'ACTIVE'
+),
+
+(
+    '20000000-0000-0000-0000-000000000010',
+    'GPS_TRACK',
+    'DOCUMENT',
+    '{"type":"LOCATION_DATA"}',
+    '{"strategy":"WATERMARK"}',
+    'RESTRICTED',
+    'EVIDENCE_RETAIN',
+    FALSE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'PLOT_EVIDENCE',
+        'PLOT_REVIEW'
+    ],
+    1,
+    'ACTIVE'
+),
+
+(
+    '20000000-0000-0000-0000-000000000011',
+    'LAND_EVIDENCE',
+    'DOCUMENT',
+    '{"type":"DOCUMENT"}',
+    '{"strategy":"WATERMARK"}',
+    'RESTRICTED',
+    'EVIDENCE_RETAIN',
+    FALSE,
+    FALSE,
+    FALSE,
+    ARRAY[
+        'PLOT_EVIDENCE',
+        'PLOT_REVIEW'
+    ],
+    1,
+    'ACTIVE'
+);

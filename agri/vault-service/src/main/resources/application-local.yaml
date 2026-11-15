@@ -1,0 +1,11 @@
+vault:
+  kms:
+    provider: local
+    local:
+      keystore-path: ./vault-data/keys/vault-keystore.p12
+      keystore-password: ${VAULT_LOCAL_KEYSTORE_PASSWORD}
+      kek-alias: vault-local-kek-v1
+
+logging:
+  level:
+    com.company.vault.keymanagement: INFO

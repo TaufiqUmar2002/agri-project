@@ -1,0 +1,17 @@
+#vault:
+#  audit:
+#    sink: ${VAULT_AUDIT_SINK:local}
+#    delivery:
+#      fixed-delay-ms: ${VAULT_AUDIT_RETRY_DELAY_MS:5000}
+#      batch-size: ${VAULT_AUDIT_RETRY_BATCH_SIZE:50}
+#    local:
+#      directory: ${VAULT_AUDIT_LOCAL_DIRECTORY:./vault-data/audit}
+#    worm:
+#      endpoint: ${VAULT_AUDIT_S3_ENDPOINT:}
+#      region: ${VAULT_AUDIT_S3_REGION:us-east-1}
+#      bucket: ${VAULT_AUDIT_S3_BUCKET:}
+#      prefix: ${VAULT_AUDIT_S3_PREFIX:audit}
+#      access-key: ${VAULT_AUDIT_S3_ACCESS_KEY:}
+#      secret-key: ${VAULT_AUDIT_S3_SECRET_KEY:}
+#      path-style: ${VAULT_AUDIT_S3_PATH_STYLE:true}
+#      retention-days: ${VAULT_AUDIT_RETENTION_DAYS:2555}

@@ -1,0 +1,7 @@
+# =========================================================================
+# Custom Starter Auto-Configurations
+# =========================================================================
+
+com.umar.config.ValidationConfig
+
+com.umar.exceptionController.GlobalExceptionController

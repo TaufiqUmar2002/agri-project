@@ -1,0 +1,37 @@
+INSERT INTO access_policy (
+    id,
+    service_identity,
+    data_class_id,
+    purposes,
+    operations,
+    requests_per_minute,
+    max_batch_size,
+    conditions,
+    version,
+    status
+)
+VALUES
+(
+    '30000000-0000-0000-0000-000000000001',
+    'AUTH-SERVICE',
+    '20000000-0000-0000-0000-000000000001',
+    ARRAY['ACCOUNT_REGISTRATION'],
+    ARRAY['TOKENIZE'],
+    60,
+    100,
+    '{"environment":"LOCAL"}',
+    1,
+    'PENDING'
+),
+(
+    '30000000-0000-0000-0000-000000000002',
+    'AUTH-SERVICE',
+    '20000000-0000-0000-0000-000000000001',
+    ARRAY['PHONE_LOOKUP'],
+    ARRAY['HASH'],
+    60,
+    100,
+    '{"environment":"LOCAL"}',
+    1,
+    'PENDING'
+);
