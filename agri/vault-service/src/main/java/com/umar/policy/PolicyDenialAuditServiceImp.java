@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class PolicyDenialAuditServiceImp implements PolicyDenialAuditService{
     @Override
     public void recordDenial(String caller, String operation, String dataClass, String purpose, String reason) {
-        log.info("weeqeq");
+        log.warn("Vault policy denial: caller={}, operation={}, dataClass={}, purpose={}, reason={}",
+                caller, operation, dataClass, purpose, reason);
     }
 }

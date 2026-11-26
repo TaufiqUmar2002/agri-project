@@ -1,0 +1,87 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-kyc-service
+  datasource:
+    url: jdbc:postgresql://localhost:6001/auth_db?options=-c%20TimeZone=UTC
+    username: ${AUTH_DB_USERNAME:admin}
+    password: ${AUTH_DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: auth-kyc-cg
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    com.umar: INFO
+
+auth:
+  security:
+    allow-header-identity: ${AUTH_ALLOW_HEADER_IDENTITY:true}
+    dev-fallback-enabled: ${AUTH_DEV_FALLBACK_ENABLED:true}
+    require-mtls: ${AUTH_REQUIRE_MTLS:false}
+    hmac-secret: ${AUTH_HMAC_SECRET:AgriShieldAuthHmacSecretKey2026!}
+    field-encryption-key: ${AUTH_FIELD_ENC_KEY:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=}
+    issuer: ${AUTH_JWT_ISSUER:https://auth.agrishield.local}
+    audience: ${AUTH_JWT_AUDIENCE:agrishield-platform}
+    farmer-access-ttl-seconds: 900
+    staff-access-ttl-seconds: 600
+    farmer-refresh-idle-days: 14
+    farmer-refresh-absolute-days: 30
+    staff-refresh-absolute-hours: 8
+    step-up-ttl-seconds: 600
+    otp-ttl-seconds: 300
+    otp-resend-seconds: 60
+    otp-max-attempts: 5
+    login-max-failures: 5
+    lockout-seconds: 900
+    escalated-lockout-seconds: 3600
+    allowed-countries: [KE, UG, TZ, RW, IN, GH, NG, ET]
+    supported-languages: [en, sw, ki, lg, rw, hi, am]
+    allowed-grpc-consumers:
+      - policy-service
+      - payout-service
+      - farmer-profile
+      - claims-service
+      - plot-registry
+      - integration-service
+      - auth-kyc-service
+  grpc:
+    enabled: ${AUTH_GRPC_ENABLED:true}
+    port: ${AUTH_GRPC_PORT:9081}
+    ssl:
+      enabled: ${AUTH_GRPC_SSL_ENABLED:false}
+  kafka:
+    enabled: ${AUTH_KAFKA_ENABLED:false}
+    outbox-enabled: ${AUTH_KAFKA_OUTBOX_ENABLED:false}
+    outbox-delay-ms: ${AUTH_KAFKA_OUTBOX_DELAY_MS:5000}
+    identity-topic: platform.identity.events
+    security-topic: platform.identity.security.events
+  kyc:
+    auto-verify-threshold: 0.90
+    manual-review-threshold: 0.70
+    case-expiry-days: 14
+    provider-fallback-hours: 24
+    max-file-bytes: 5242880
+    review-lock-minutes: 30
+  limits:
+    agent-daily-attempts: 100
+    agent-daily-confirmations: 50
+    register-per-phone-per-hour: 3
+    register-per-ip-per-hour: 20
+    login-per-account-per-15min: 10
+    data-rights-per-user-per-day: 3
+    kyc-submissions-per-user-per-day: 5

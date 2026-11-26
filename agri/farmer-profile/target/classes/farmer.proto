@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package farmer.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.grpc.farmer.v1";
+option java_outer_classname = "FarmerProfileProto";
+
+service FarmerService {
+  rpc GetPayoutDestination (GetPayoutDestinationRequest) returns (GetPayoutDestinationResponse);
+  rpc GetFarmerContext (GetFarmerContextRequest) returns (GetFarmerContextResponse);
+}
+
+enum GrpcPayoutHold {
+  HOLD_UNSPECIFIED = 0;
+  NONE = 1;
+  PROFILE_RESTRICTED = 2;
+  WALLET_UNDER_REVIEW = 3;
+  NO_VERIFIED_WALLET = 4;
+  FRAUD_HOLD = 5;
+}
+
+message GetPayoutDestinationRequest {
+  string farmer_id = 1;
+  string as_of = 2;
+  bool check_only = 3;
+  string request_id = 4;
+}
+
+message GetPayoutDestinationResponse {
+  bool usable = 1;
+  string wallet_id = 2;
+  string provider = 3;
+  string masked_number = 4;
+  string wallet_token = 5;
+  string fallback_wallet_id = 6;
+  GrpcPayoutHold hold = 7;
+  bool pending_change = 8;
+  string as_of = 9;
+}
+
+enum GrpcFarmerContextField {
+  FIELD_UNSPECIFIED = 0;
+  COMMUNICATION = 1;
+  REGION = 2;
+  FARM = 3;
+  GROUP = 4;
+  STATUS = 5;
+}
+
+enum GrpcFarmerStatus {
+  FARMER_STATUS_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  RESTRICTED = 2;
+  CLOSED = 3;
+}
+
+message QuietHoursMsg {
+  string start = 1;
+  string end = 2;
+  string timezone = 3;
+}
+
+message CommunicationContext {
+  string preferred_language = 1;
+  string preferred_channel = 2;
+  QuietHoursMsg quiet_hours = 3;
+  bool urgent_override_allowed = 4;
+}
+
+message RegionContext {
+  string country = 1;
+  string district = 2;
+  string ward = 3;
+}
+
+message FarmContext {
+  string farm_size_band = 1;
+  repeated string primary_crops = 2;
+}
+
+message GroupContext {
+  string group_id = 1;
+  string group_type = 2;
+  string sponsor_org_id = 3;
+}
+
+message GetFarmerContextRequest {
+  string farmer_id = 1;
+  repeated GrpcFarmerContextField fields = 2;
+  string request_id = 3;
+}
+
+message GetFarmerContextResponse {
+  GrpcFarmerStatus status = 1;
+  CommunicationContext communication = 2;
+  RegionContext region = 3;
+  FarmContext farm = 4;
+  GroupContext group = 5;
+  int32 version = 6;
+  string as_of = 7;
+}

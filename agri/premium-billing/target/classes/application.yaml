@@ -1,0 +1,37 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: billing-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+billing:
+  kafka:
+    enabled: false
+    billing-topic: platform.billing.events
+    identity-topic: platform.identity.events
+  rules:
+    fee-cap-percent: 2.0
+    discount-cap-percent: 10.0
+    attempt-expiry-minutes: 5
+    callback-freshness-minutes: 5
+    refund-single-limit-minor: 2000000
+    bank-transfer-limit-minor: 2000000
+    min-deposit-percent: 40.0
+    max-grace-days: 14
+    max-reinstatement-days: 14
+    cash-dispute-days: 7

@@ -14,7 +14,7 @@ public class TokenizePolicyResourceResolver implements PolicyResourceResolver {
 
     @Override
     public boolean supports(Method method) {
-        return method.getName().equals("processTokenizations");
+        return method.getName().equals("processTokenization");
     }
 
     @Override

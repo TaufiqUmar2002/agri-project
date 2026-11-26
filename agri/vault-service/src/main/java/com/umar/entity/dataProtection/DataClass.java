@@ -71,6 +71,12 @@ public class DataClass {
     @Column(name = "version")
     private int version;
 
+    @Column(name = "retention_class_default")
+    private String retentionClassDefault;
+
+    @Column(name = "max_value_size")
+    private Integer maxValueSize;
+
     @Column(name = "status")
     private String status;
 

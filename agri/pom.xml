@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.umar</groupId>
+        <artifactId>autonomous-space-mission</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>agri</artifactId>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>auth-service</module>
+        <module>farmer-profile</module>
+        <module>plot-registry</module>
+        <module>claims-service</module>
+        <module>policy-service</module>
+        <module>premium-billing</module>
+        <module>trigger-engine</module>
+        <module>payout-service</module>
+        <module>notification-service</module>
+        <module>riskpool-service</module>
+        <module>iot-service</module>
+        <module>audit-service</module>
+        <module>integration-service</module>
+        <module>vault-service</module>
+    </modules>
+
+</project>

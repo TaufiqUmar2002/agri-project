@@ -16,16 +16,8 @@ import java.util.List;
 @Entity
 @Table(
         name = "ACCESS_POLICY",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "UK_VAULT_ACCESS_POLICY",
-                        columnNames = {
-                                "SERVICE_IDENTITY",
-                                "DATA_CLASS",
-                                "PURPOSE",
-                                "OPERATION"
-                        }
-                )
+        indexes = {
+                @Index(name = "idx_access_policy_identity_class", columnList = "SERVICE_IDENTITY, DATA_CLASS")
         }
 )
 public class AccessPolicy {
@@ -66,6 +58,24 @@ public class AccessPolicy {
 
     @Column(name = "VERSIONS")
     private String versions;
+
+    @Column(name = "KIND")
+    private String kind;
+
+    @Column(name = "POLICY_NAME")
+    private String policyName;
+
+    @Column(name = "POLICY_STATUS")
+    private String policyStatus; // PENDING_APPROVAL | ACTIVE | SCHEDULED | REVOKED
+
+    @Column(name = "EFFECTIVE_FROM")
+    private Instant effectiveFrom;
+
+    @Column(name = "DEFINITION_HASH")
+    private String definitionHash;
+
+    @Column(name = "APPROVAL_ID")
+    private java.util.UUID approvalId;
 
     @Column(nullable = false,name = "STATUS")
     private boolean status;

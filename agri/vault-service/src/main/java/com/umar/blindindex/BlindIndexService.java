@@ -55,7 +55,7 @@ public class BlindIndexService {
     /**
      * Searches for an existing token for the same subject and class.
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<BlindIndexMatch> findExistingForSubject(
             String dataClass,
             String subjectRef,
@@ -189,14 +189,13 @@ public class BlindIndexService {
         }
 
         try {
-//            repository.saveAndFlush(
-//                    new BlindIndexEntry(
-//                            tokenId,
-//                            dataClass,
-//                            tokenId,
-//                            subjectRef,
-//                            keyVersionId,
-//                            hash));
+            BlindIndexEntry entry = new BlindIndexEntry();
+            entry.setTokenId(tokenId);
+            entry.setDataClass(dataClass);
+            entry.setSubjectRef(subjectRef);
+            entry.setIndexKeyVersionId(keyVersionId);
+            entry.setIndexHash(hash);
+            repository.saveAndFlush(entry);
 
         } catch (DataIntegrityViolationException ex) {
             // Another transaction may have inserted the same index.
@@ -204,6 +203,22 @@ public class BlindIndexService {
             // Do not swallow the exception and continue using this transaction.
             throw ex;
         }
+    }
+
+    @Transactional
+    public int deleteForSubjectAndClasses(String subjectRef, List<String> dataClasses) {
+        if (subjectRef == null || dataClasses == null || dataClasses.isEmpty()) {
+            return 0;
+        }
+        return repository.deleteBySubjectRefAndDataClassIn(subjectRef, dataClasses);
+    }
+
+    @Transactional
+    public int deleteAllForSubject(String subjectRef) {
+        if (subjectRef == null) {
+            return 0;
+        }
+        return repository.deleteBySubjectRef(subjectRef);
     }
 
     public record CalculatedIndex(

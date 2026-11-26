@@ -1,0 +1,35 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:hubtest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+
+hub:
+  auth:
+    allow-header-identity: true
+    dev-fallback-enabled: false
+    require-mtls: false
+  grpc:
+    enabled: true
+    port: 0
+    ssl:
+      enabled: false
+  kafka:
+    enabled: false
+    outbox-enabled: false
+  vault:
+    mode: local
+  webhook:
+    allow-loopback-in-test: true
+    allowed-ports: [443, 8443, 8080, 8089]

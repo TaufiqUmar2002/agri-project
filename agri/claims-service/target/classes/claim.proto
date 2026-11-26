@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package claim.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.claims.grpc.proto";
+option java_outer_classname = "ClaimProto";
+
+service ClaimService {
+  rpc GetPaymentInstruction (GetPaymentInstructionRequest) returns (GetPaymentInstructionResponse);
+}
+
+message GetPaymentInstructionRequest {
+  string claim_id = 1;
+  int32 attempt = 2;
+  string payout_id = 3;
+  string request_id = 4;
+}
+
+message GetPaymentInstructionResponse {
+  bool payable = 1;
+  int64 amount_minor = 2;
+  string currency = 3;
+  string route = 4;
+  bool use_current_destination = 5;
+  string as_of = 6;
+  string decision_id = 7;
+  string terms_hash = 8;
+  int32 claim_version = 9;
+  string expires_at = 10;
+  string reason_code = 11;
+  bool retryable = 12;
+  string hold_reason = 13;
+}

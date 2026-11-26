@@ -7,6 +7,11 @@ spring:
   devtools:
     add-properties: true
 
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-audit.sql
+
   datasource:
     url: jdbc:postgresql://localhost:6001/vault_db?options=-c%20TimeZone=UTC
     username: admin
@@ -41,7 +46,7 @@ spring:
       provider: ${VAULT_KMS_PROVIDER:local}
 
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: false
 
@@ -54,3 +59,38 @@ spring:
     endpoint:
       health:
         show-details: always
+
+vault:
+  idempotency:
+    retention-hours: 24
+    cleanup-cron: "0 */5 * * * *"
+    processing-lease-seconds: 30
+  blind-index:
+    algorithm: HMAC-SHA256
+    batch-size: 100
+  audit:
+    sink: ${VAULT_AUDIT_SINK:local}
+    delivery:
+      fixed-delay-ms: ${VAULT_AUDIT_RETRY_DELAY_MS:5000}
+      initial-delay-ms: ${VAULT_AUDIT_RETRY_INITIAL_DELAY_MS:5000}
+      batch-size: ${VAULT_AUDIT_RETRY_BATCH_SIZE:50}
+    local:
+      directory: ${VAULT_AUDIT_LOCAL_DIRECTORY:./vault-data/audit}
+  storage:
+    primary-dir: ${VAULT_STORAGE_PRIMARY_DIR:./vault-data/objects/primary}
+    replica-dir: ${VAULT_STORAGE_REPLICA_DIR:./vault-data/objects/secondary}
+  auth:
+    require-mtls: ${VAULT_REQUIRE_MTLS:false}
+    allow-header-identity: ${VAULT_ALLOW_HEADER_IDENTITY:true}
+    dev-fallback-enabled: ${VAULT_DEV_FALLBACK_ENABLED:true}
+  grpc:
+    enabled: ${VAULT_GRPC_ENABLED:true}
+    port: ${VAULT_GRPC_PORT:9443}
+    ssl:
+      enabled: ${VAULT_GRPC_SSL_ENABLED:false}
+      cert-chain: ${VAULT_GRPC_CERT:certs/server/vault-server.crt}
+      private-key: ${VAULT_GRPC_KEY:certs/server/vault-server.key}
+      trust-cert: ${VAULT_GRPC_CA:certs/ca/vault-ca.crt}
+  kafka:
+    outbox-enabled: ${VAULT_KAFKA_OUTBOX_ENABLED:false}
+    outbox-delay-ms: ${VAULT_KAFKA_OUTBOX_DELAY_MS:5000}

@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package hub.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.grpc.hub.v1";
+option java_outer_classname = "IntegrationHubProto";
+
+service ExtensionService {
+  rpc RegisterExtensionPoints (RegisterExtensionPointsRequest) returns (RegisterExtensionPointsResponse);
+  rpc InvokeExtension (InvokeExtensionRequest) returns (InvokeExtensionResponse);
+}
+
+message DeclaredExtensionPoint {
+  string hook_id = 1;
+  string type = 2; // PRE | ENRICH | TRANSFORM | VALIDATE | POST | ADAPTER | SHADOW
+  string contract_version = 3;
+  string input_schema_ref = 4;
+  string output_schema_ref = 5;
+  repeated string data_scopes = 6;
+  int32 default_timeout_ms = 7;
+  int32 max_timeout_ms = 8;
+  repeated string allowed_fail_modes = 9;
+  bool protected = 10;
+  bool partner_visible = 11;
+  string description = 12;
+  string deprecates_on = 13;
+}
+
+message RegisterExtensionPointsRequest {
+  string service_name = 1;
+  string service_version = 2;
+  repeated DeclaredExtensionPoint points = 3;
+  string sdk_version = 4;
+  int64 known_snapshot_version = 5;
+  string request_id = 6;
+}
+
+message RejectedExtensionPoint {
+  string hook_id = 1;
+  string reason = 2; // CONTRACT_BREAKING_CHANGE | INVALID_NAME | INVALID_TYPE | LIMIT_EXCEEDED | PROTECTION_CONFLICT
+  string detail = 3;
+}
+
+message ExtensionScope {
+  repeated string tenant_ids = 1;
+  repeated string product_ids = 2;
+  repeated string region_codes = 3;
+}
+
+message EnabledExtensionSnapshotEntry {
+  string hook_id = 1;
+  string extension_id = 2;
+  string version = 3;
+  ExtensionScope scope = 4;
+  int32 priority = 5;
+  string fail_mode = 6;
+  int32 timeout_ms = 7;
+  string runtime_kind = 8;
+  string rollout_stage = 9; // FULL | SHADOW | CANARY
+  int32 canary_percent = 10;
+}
+
+message EnablementSnapshot {
+  int64 snapshot_version = 1;
+  repeated EnabledExtensionSnapshotEntry enabled = 2;
+}
+
+message RegisterExtensionPointsResponse {
+  repeated string accepted = 1;
+  repeated RejectedExtensionPoint rejected = 2;
+  EnablementSnapshot snapshot = 3;
+  int32 poll_after_seconds = 4;
+  string as_of = 5;
+}
+
+message InvocationContext {
+  string tenant_id = 1;
+  string product_id = 2;
+  string region_code = 3;
+}
+
+message InvokeExtensionRequest {
+  string hook_id = 1;
+  string contract_version = 2;
+  string caller_service = 3;
+  string correlation_id = 4;
+  InvocationContext context = 5;
+  string subject_ref = 6;
+  bytes input = 7; // JSON payload
+  int32 deadline_ms = 8;
+  string request_id = 9;
+}
+
+enum InvokeStatus {
+  INVOKE_STATUS_UNSPECIFIED = 0;
+  OK = 1;
+  NO_EXTENSION = 2;
+  PARTIAL = 3;
+  FAILED_OPEN = 4;
+  HELD = 5;
+  REJECTED = 6;
+}
+
+enum ExtensionExecutionResult {
+  EXECUTION_RESULT_UNSPECIFIED = 0;
+  EXEC_OK = 1;
+  TIMEOUT = 2;
+  ERROR = 3;
+  RULE_VIOLATION = 4;
+  SHADOW = 5;
+  SKIPPED = 6;
+}
+
+enum FailModeApplied {
+  FAIL_MODE_NONE = 0;
+  FAIL_OPEN = 1;
+  HOLD_FOR_REVIEW = 2;
+  FAIL_CLOSED = 3;
+}
+
+message ExtensionOutcome {
+  string extension_id = 1;
+  string version = 2;
+  ExtensionExecutionResult result = 3;
+  int64 latency_ms = 4;
+  string reason = 5;
+}
+
+message MergedExtensionResult {
+  bytes payload_json = 1; // merged JSON (holds, rejections, attributes x_*, loadings, transformed)
+  repeated string holds = 2;
+  repeated string rejections = 3;
+}
+
+message InvokeExtensionResponse {
+  InvokeStatus status = 1;
+  MergedExtensionResult merged = 2;
+  repeated ExtensionOutcome extensions = 3;
+  FailModeApplied fail_mode_applied = 4;
+  string invocation_id = 5;
+  int64 snapshot_version = 6;
+}

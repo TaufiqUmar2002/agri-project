@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.grpc.auth.v1";
+option java_outer_classname = "AuthIdentityProto";
+
+service IdentityService {
+  rpc GetIdentityContext (GetIdentityContextRequest) returns (GetIdentityContextResponse);
+  rpc ValidateDelegation (ValidateDelegationRequest) returns (ValidateDelegationResponse);
+}
+
+message GetIdentityContextRequest {
+  string user_id = 1;
+  repeated string purposes = 2;
+  string request_id = 3;
+}
+
+enum GrpcAccountStatus {
+  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  LOCKED = 2;
+  SUSPENDED = 3;
+  PENDING_APPROVAL = 4;
+  CLOSED = 5;
+  PENDING_OTP = 6;
+}
+
+enum GrpcKycTier {
+  KYC_TIER_UNSPECIFIED = 0;
+  TIER_0 = 1;
+  TIER_1 = 2;
+  TIER_2 = 3;
+}
+
+enum GrpcConsentState {
+  CONSENT_STATE_UNSPECIFIED = 0;
+  CONSENT_ACTIVE = 1;
+  CONSENT_WITHDRAWN = 2;
+  CONSENT_MISSING = 3;
+}
+
+message ConsentContextItem {
+  string purpose = 1;
+  GrpcConsentState status = 2;
+  string text_version = 3;
+  string granted_at = 4;
+}
+
+message GetIdentityContextResponse {
+  GrpcAccountStatus account_status = 1;
+  repeated string roles = 2;
+  GrpcKycTier kyc_tier = 3;
+  repeated ConsentContextItem consents = 4;
+  string locked_until = 5;
+  string as_of = 6;
+}
+
+enum GrpcDelegationScope {
+  DELEGATION_SCOPE_UNSPECIFIED = 0;
+  KYC_SUBMIT = 1;
+  CONSENT_CAPTURE = 2;
+  PLOT_REGISTER = 3;
+  PROFILE_EDIT = 4;
+}
+
+enum GrpcDelegationReason {
+  REASON_UNSPECIFIED = 0;
+  NONE = 1;
+  NOT_FOUND = 2;
+  MISMATCH = 3;
+  NOT_CONFIRMED = 4;
+  EXPIRED = 5;
+  REVOKED_BY_FARMER = 6;
+  SCOPE_NOT_GRANTED = 7;
+  AGENT_NOT_ACTIVE = 8;
+}
+
+message ValidateDelegationRequest {
+  string delegation_id = 1;
+  string agent_id = 2;
+  string farmer_user_id = 3;
+  GrpcDelegationScope required_scope = 4;
+}
+
+message ValidateDelegationResponse {
+  bool valid = 1;
+  GrpcDelegationReason reason = 2;
+  string valid_until = 3;
+  repeated GrpcDelegationScope granted_scopes = 4;
+}

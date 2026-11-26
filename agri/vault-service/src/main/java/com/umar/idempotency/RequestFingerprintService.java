@@ -62,7 +62,7 @@ public class RequestFingerprintService {
             ObjectNode sorted = objectMapper.createObjectNode();
 
             List<String> names = new ArrayList<>();
-//            node.fieldNames().forEachRemaining(names::add);
+            names.addAll(node.propertyNames());
             names.sort(Comparator.naturalOrder());
 
             for (String name : names) {

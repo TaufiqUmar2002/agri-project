@@ -28,7 +28,7 @@ public interface IdempotencyRepository extends JpaRepository<IdempotencyRecord, 
             updated_at,
             expires_at
         )
-        VALUES (
+        SELECT
             :id,
             :caller,
             :operation,
@@ -40,13 +40,12 @@ public interface IdempotencyRepository extends JpaRepository<IdempotencyRecord, 
             :now,
             :now,
             :expiresAt
+        WHERE NOT EXISTS (
+            SELECT 1 FROM idempotency_record r
+            WHERE r.caller_service = :caller
+              AND r.operation = :operation
+              AND r.idempotency_key = :key
         )
-        ON CONFLICT (
-            caller_service,
-            operation,
-            idempotency_key
-        )
-        DO NOTHING
         """, nativeQuery = true)
     int insertIfAbsent(
             @Param("id") UUID id,

@@ -19,15 +19,18 @@ public class ErasureRegistry {
     @Id
     private UUID id;
 
-    @Column(name = "SUBJECT_HASH")
+    @Column(name = "SUBJECT_HASH", nullable = false)
     private String subjectHash;
 
-    @Column(name = "GROUP_NAME")
+    @Column(name = "GROUP_NAME", nullable = false)
     private String group;
 
     @Column(name = "SHREDDED_AT")
     private String shreddedAt;
 
-    @Column(name = "REQUEST_ID")
+    @Column(name = "REQUEST_ID", nullable = false)
     private String requestId;
+
+    @Column(name = "REASON")
+    private String reason;
 }

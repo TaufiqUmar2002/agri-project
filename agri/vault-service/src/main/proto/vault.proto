@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package vault.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.grpc.vault.v1";
+option java_outer_classname = "VaultServiceProto";
+
+service VaultService {
+  rpc Tokenize (TokenizeGrpcRequest) returns (TokenizeGrpcResponse);
+  rpc Detokenize (DetokenizeGrpcRequest) returns (DetokenizeGrpcResponse);
+  rpc Hash (HashGrpcRequest) returns (HashGrpcResponse);
+  rpc Sign (SignGrpcRequest) returns (SignGrpcResponse);
+
+  rpc TokenizeStream (stream TokenizeGrpcRequest) returns (stream TokenizeGrpcResponse);
+  rpc DetokenizeStream (stream DetokenizeGrpcRequest) returns (stream DetokenizeGrpcResponse);
+}
+
+message TokenizeGrpcItem {
+  string data_class = 1;
+  string value = 2;
+  string subject_ref = 3;
+  string format = 4;       // OPAQUE | FPE
+  bool reuse_existing = 5;
+  bool reuse_existing_set = 6;
+}
+
+message TokenizeGrpcRequest {
+  string purpose = 1;
+  string context_ref = 2;
+  repeated TokenizeGrpcItem items = 3;
+  string request_id = 4;
+}
+
+message TokenGrpcSuccess {
+  int32 index = 1;
+  string token = 2;
+  string data_class = 3;
+  string masked = 4;
+  bool reused = 5;
+  string format = 6;
+  string created_at = 7;
+}
+
+message ItemGrpcFailure {
+  int32 index = 1;
+  string code = 2;
+  string message = 3;
+}
+
+message TokenizeGrpcResponse {
+  repeated TokenGrpcSuccess tokens = 1;
+  repeated ItemGrpcFailure failures = 2;
+  string request_id = 3;
+}
+
+message DetokenizeGrpcRequest {
+  string purpose = 1;
+  string context_ref = 2;
+  repeated string tokens = 3;
+  string return_mode = 4; // VALUE | MASKED
+  string request_id = 5;
+}
+
+message ResolvedGrpcValue {
+  string token = 1;
+  string data_class = 2;
+  string value = 3;
+}
+
+message TokenGrpcFailure {
+  string token = 1;
+  string code = 2;
+}
+
+message DetokenizeGrpcResponse {
+  repeated ResolvedGrpcValue values = 1;
+  repeated TokenGrpcFailure failures = 2;
+  string request_id = 3;
+}
+
+message HashGrpcRequest {
+  string data_class = 1;
+  string purpose = 2;
+  string context_ref = 3;
+  repeated string values = 4;
+  string request_id = 5;
+}
+
+message HashVersionEntry {
+  bytes hash = 1;
+  int32 key_version = 2;
+  string hash_hex = 3;
+}
+
+message ValueHashResult {
+  int32 value_index = 1;
+  repeated HashVersionEntry entries = 2;
+}
+
+message HashGrpcResponse {
+  repeated ValueHashResult hashes = 1;
+  string request_id = 2;
+}
+
+message SignGrpcRequest {
+  string secret_ref = 1;
+  string algorithm = 2;
+  string purpose = 3;
+  string context_ref = 4;
+  bytes payload = 5;
+  int32 version = 6;
+  string request_id = 7;
+}
+
+message SignGrpcResponse {
+  bytes signature = 1;
+  int32 key_version = 2;
+  string algorithm = 3;
+  string kid = 4;
+  string request_id = 5;
+}

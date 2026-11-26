@@ -1,0 +1,3 @@
+com\umar\IntegrationHubEndToEndTest.class
+com\umar\IntegrationBridgeEndToEndTest.class
+com\umar\IntegrationHubGrpcTest.class

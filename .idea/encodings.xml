@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/agri/audit-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/auth-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/claims-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/farmer-profile/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/integration-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/iot-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/notification-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/payout-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/plot-registry/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/policy-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/premium-billing/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/riskpool-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/trigger-engine/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/agri/vault-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/service-registry/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cloud/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

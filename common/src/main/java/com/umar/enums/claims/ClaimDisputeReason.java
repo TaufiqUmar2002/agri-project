@@ -1,0 +1,5 @@
+package com.umar.enums.claims;
+
+public enum ClaimDisputeReason {
+    BOUNDARY_DISPUTE, WRONG_PRODUCT, SEASON_MISMATCH, DATA_QUALITY, CALCULATION_ERROR, PAYMENT_NOT_RECEIVED, OTHER
+}

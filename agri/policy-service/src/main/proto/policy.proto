@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package policy.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.policy.grpc";
+option java_outer_classname = "PolicyProto";
+
+service PolicyService {
+  rpc GetPolicyTerms (GetPolicyTermsRequest) returns (GetPolicyTermsResponse);
+  rpc ListFarmerPolicies (ListFarmerPoliciesRequest) returns (ListFarmerPoliciesResponse);
+}
+
+message GetPolicyTermsRequest {
+  repeated string policy_ids = 1;
+  repeated string plot_ids = 2;
+  string as_of = 3;
+  bool include_product_terms = 4;
+  string request_id = 5;
+}
+
+message PhaseTerm {
+  string name = 1;
+  int32 start_offset_days = 2;
+  int32 end_offset_days = 3;
+  double weight = 4;
+}
+
+message TierTerm {
+  string operator = 1;
+  double threshold_value = 2;
+  int32 payout_percent = 3;
+}
+
+message CorroborationRule {
+  int32 required_sources = 1;
+  repeated string allowed_sources = 2;
+}
+
+message ProductTerms {
+  string index_ref = 1;
+  repeated PhaseTerm phases = 2;
+  repeated TierTerm tiers = 3;
+  CorroborationRule corroboration = 4;
+}
+
+message PolicyTermsEntry {
+  string policy_id = 1;
+  string policy_number = 2;
+  string farmer_id = 3;
+  string plot_id = 4;
+  string status = 5;
+  string product_id = 6;
+  int32 product_version = 7;
+  string definition_hash = 8;
+  string terms_hash = 9;
+  string currency = 10;
+  int64 sum_insured_minor = 11;
+  string coverage_start = 12;
+  string coverage_end = 13;
+  bool premium_confirmed = 14;
+  string payout_state = 15;
+  int64 paid_to_date_minor = 16;
+  int64 remaining_minor = 17;
+  ProductTerms product_terms = 18;
+}
+
+message GetPolicyTermsResponse {
+  repeated PolicyTermsEntry policies = 1;
+  repeated string not_found_ids = 2;
+  string as_of = 3;
+}
+
+message ListFarmerPoliciesRequest {
+  string farmer_id = 1;
+  repeated string statuses = 2;
+  int32 ending_within_days = 3;
+  string request_id = 4;
+}
+
+message FarmerPolicySummary {
+  string policy_id = 1;
+  string policy_number = 2;
+  string status = 3;
+  string product_id = 4;
+  string product_name = 5;
+  string plot_id = 6;
+  string coverage_start = 7;
+  string coverage_end = 8;
+  string premium_status = 9;
+  string payout_state = 10;
+  bool renewal_due = 11;
+}
+
+message ListFarmerPoliciesResponse {
+  repeated FarmerPolicySummary policies = 1;
+  string as_of = 2;
+}

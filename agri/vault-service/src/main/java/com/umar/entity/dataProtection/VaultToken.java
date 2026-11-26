@@ -35,10 +35,13 @@ public class VaultToken {
     @Column(name = "SUBJECT_REF")
     private String subjectRef;
 
+    @Column(name = "SUBJECT_KEY_ID")
+    private UUID subjectKeyId;
+
     @Column(name = "RETENTION_GROUP")
     private String retentionGroup;
 
-    @Column(columnDefinition = "TEXT", nullable = false,name = "CIPHER_TEXT")
+    @Column(columnDefinition = "BYTEA", nullable = false, name = "CIPHER_TEXT")
     private byte[] ciphertext;
 
     @Column(name = "NONCE")
@@ -46,6 +49,9 @@ public class VaultToken {
 
     @Column(name = "KEY_VERSION")
     private int keyVersion;
+
+    @Column(name = "WRAPPED_DEK", columnDefinition = "BYTEA")
+    private byte[] wrappedDek;
 
     @Column(name = "MASKED_FORM")
     private String maskedForm;

@@ -1,0 +1,39 @@
+# Port 8093/9093 avoids collision with payout-service on 8088
+server:
+  port: 8093
+
+spring:
+  application:
+    name: riskpool-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ledger_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ledger-posting-cg
+      auto-offset-reset: earliest
+
+riskpool:
+  grpc:
+    port: 9093
+    service-token: ${RISKPOOL_SERVICE_TOKEN:dev-internal-service-token}
+    allowed-callers: policy-service
+  kafka:
+    enabled: ${RISKPOOL_KAFKA_ENABLED:false}
+    ledger-topic: platform.ledger.events
+  rules:
+    manual-journal-single-limit-minor: 5000000
+    max-region-share-limit: 0.60
+    min-group-size: 5

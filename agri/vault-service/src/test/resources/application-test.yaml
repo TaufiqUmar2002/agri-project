@@ -1,0 +1,49 @@
+server:
+  port: 0
+  ssl:
+    enabled: false
+
+spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-audit-test.sql
+  datasource:
+    url: jdbc:h2:mem:vaulttest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+
+vault:
+  master-key: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+  kms:
+    provider: local
+    local:
+      keystore-path: ./target/test-vault-data/keys/vault-keystore.p12
+      keystore-password: test-keystore-password
+      kek-alias: vault-local-kek-v1
+  audit:
+    sink: local
+    local:
+      directory: ./target/test-vault-data/audit
+  storage:
+    primary-dir: ./target/test-vault-data/objects/primary
+    replica-dir: ./target/test-vault-data/objects/secondary
+  auth:
+    require-mtls: false
+    allow-header-identity: true
+    dev-fallback-enabled: true
+  grpc:
+    enabled: true
+    port: 0
+    ssl:
+      enabled: false
+  kafka:
+    outbox-enabled: false

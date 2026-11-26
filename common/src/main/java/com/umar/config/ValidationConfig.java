@@ -12,14 +12,14 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @Configuration
 public class ValidationConfig {
 
-
     @ConditionalOnMissingBean(name = "messageSource")
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasename("messages");
+        source.setBasenames("messages", "service-messages");
         source.setDefaultEncoding("UTF-8");
         source.setUseCodeAsDefaultMessage(true);
+        source.setFallbackToSystemLocale(false);
         return source;
     }
 
@@ -30,5 +30,4 @@ public class ValidationConfig {
         factoryBean.setValidationMessageSource(messageSource);
         return factoryBean;
     }
-
 }

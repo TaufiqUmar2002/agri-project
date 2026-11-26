@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package plot.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.grpc.plot.v1";
+option java_outer_classname = "PlotRegistryProto";
+
+service PlotService {
+  rpc ListFarmerPlots (ListFarmerPlotsRequest) returns (ListFarmerPlotsResponse);
+  rpc StreamPlotsWithin (StreamPlotsWithinRequest) returns (stream StreamPlotsWithinResponse);
+  rpc GetPlotDetails (GetPlotDetailsRequest) returns (GetPlotDetailsResponse);
+}
+
+enum GrpcPlotStatus {
+  PLOT_STATUS_UNSPECIFIED = 0;
+  REGISTERED = 1;
+  HELD = 2;
+  VALIDATED = 3;
+  REJECTED = 4;
+  RETIRED = 5;
+}
+
+enum GrpcCoverageFilter {
+  COVERAGE_ANY = 0;
+  COVERAGE_NONE = 1;
+  COVERAGE_ACTIVE = 2;
+  COVERAGE_LAPSED = 3;
+}
+
+message ListFarmerPlotsRequest {
+  string farmer_id = 1;
+  repeated GrpcPlotStatus statuses = 2;
+  GrpcCoverageFilter coverage = 3;
+  bool include_retired = 4;
+  string request_id = 5;
+}
+
+message PlotSummaryItem {
+  string plot_id = 1;
+  string name = 2;
+  GrpcPlotStatus status = 3;
+  double area_ha = 4;
+  string accuracy_class = 5;
+  string crop_code = 6;
+  string planting_date = 7;
+  string expected_harvest_date = 8;
+  string coverage_status = 9;
+  string monitoring_status = 10;
+  string location_cell = 11;
+}
+
+message ListFarmerPlotsResponse {
+  repeated PlotSummaryItem plots = 1;
+  string as_of = 2;
+}
+
+enum GrpcMatchMode {
+  INTERSECTS = 0;
+  CENTROID_WITHIN = 1;
+  MIN_OVERLAP = 2;
+}
+
+message StreamPlotsWithinRequest {
+  bytes polygon_wkb = 1;
+  string as_of = 2;
+  GrpcMatchMode match_mode = 3;
+  double min_overlap_percent = 4;
+  repeated string crop_codes = 5;
+  repeated string region_codes = 6;
+  int32 batch_size = 7;
+  string resume_token = 8;
+  string request_id = 9;
+}
+
+message StreamPlotMatch {
+  string plot_id = 1;
+  string policy_id = 2;
+  string farmer_id = 3;
+  double area_ha = 4;
+  double overlap_percent = 5;
+  string location_cell6 = 6;
+  string coverage_from = 7;
+  string coverage_to = 8;
+}
+
+message StreamBatchMessage {
+  repeated StreamPlotMatch matches = 1;
+  string resume_token = 2;
+}
+
+message StreamSummaryMessage {
+  int64 matched_count = 1;
+  double total_area_ha = 2;
+  int64 paused_count = 3;
+  int64 unvalidated_count = 4;
+  int64 outside_coverage_count = 5;
+  string checksum = 6;
+  string snapshot_time = 7;
+  string rule_set_version = 8;
+}
+
+message StreamPlotsWithinResponse {
+  oneof payload {
+    StreamBatchMessage batch = 1;
+    StreamSummaryMessage summary = 2;
+  }
+}
+
+enum GrpcGeometryPurpose {
+  PURPOSE_UNSPECIFIED = 0;
+  TRIGGER_EVALUATION = 1;
+  IMAGERY_ANALYSIS = 2;
+  YIELD_MODEL = 3;
+  PRICING = 4;
+  FRAUD_ANALYSIS = 5;
+}
+
+message GetPlotDetailsRequest {
+  repeated string plot_ids = 1;
+  GrpcGeometryPurpose purpose = 2;
+  bool include_geometry = 3;
+  int32 geometry_version = 4;
+  string request_id = 5;
+}
+
+message LatLon {
+  double lat = 1;
+  double lon = 2;
+}
+
+message PlotSeasonDetail {
+  string crop_code = 1;
+  string planting_date = 2;
+  string expected_harvest_date = 3;
+  string irrigation_type = 4;
+  string season_status = 5;
+}
+
+message PlotCoverageWindowMsg {
+  string policy_id = 1;
+  string from = 2;
+  string to = 3;
+}
+
+message PlotDetailItem {
+  string plot_id = 1;
+  string farmer_id = 2;
+  GrpcPlotStatus status = 3;
+  double area_ha = 4;
+  string accuracy_class = 5;
+  bytes geometry_wkb = 6;
+  LatLon centroid = 7;
+  string bbox = 8;
+  string geohash7 = 9;
+  int32 geometry_version = 10;
+  string geometry_hash = 11;
+  PlotSeasonDetail season = 12;
+  repeated PlotCoverageWindowMsg coverage_windows = 13;
+}
+
+message GetPlotDetailsResponse {
+  repeated PlotDetailItem plots = 1;
+  repeated string not_found_ids = 2;
+  string as_of = 3;
+}

@@ -1,0 +1,5 @@
+# Created at 2026-11-26T02:12:46.442
+Boot Manifest-JAR contains absolute paths in classpath 'D:\Backend\Projects\Microservices\AgreeShield\agri\notification-service\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

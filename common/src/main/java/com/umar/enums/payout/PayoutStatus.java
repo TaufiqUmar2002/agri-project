@@ -1,0 +1,5 @@
+package com.umar.enums.payout;
+
+public enum PayoutStatus {
+    CREATED, WAITING_INSTRUCTION, WAITING_PROVIDER, READY, SENDING, PENDING, COMPLETED, FAILED, CANCELLED
+}

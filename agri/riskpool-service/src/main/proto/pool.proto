@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package pool.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.riskpool.grpc.proto";
+option java_outer_classname = "PoolProto";
+
+service PoolService {
+  rpc CheckCapacity (CheckCapacityRequest) returns (CheckCapacityResponse);
+}
+
+message CheckCapacityRequest {
+  string policy_id = 1;
+  string product_id = 2;
+  string region_code = 3;
+  string peril = 4;
+  string season = 5;
+  int64 sum_insured_minor = 6;
+  string currency = 7;
+  string mode = 8; // CHECK_ONLY | RESERVE
+  int32 reservation_days = 9;
+  string request_id = 10;
+}
+
+message ReservationInfo {
+  string reservation_id = 1;
+  string expires_at = 2;
+}
+
+message CheckCapacityResponse {
+  bool allowed = 1;
+  repeated string reasons = 2;
+  repeated string warnings = 3;
+  string pool_id = 4;
+  int64 headroom_minor = 5;
+  ReservationInfo reservation = 6;
+  string as_of = 7;
+}

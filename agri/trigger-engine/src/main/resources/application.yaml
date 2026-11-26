@@ -1,0 +1,40 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: trigger-engine
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trigger_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: trigger-engine-cg
+      auto-offset-reset: earliest
+
+trigger:
+  grpc:
+    port: 9086
+    service-token: ${TRIGGER_SERVICE_TOKEN:dev-internal-service-token}
+    status-allowed-callers: claims-service,payout-service,riskpool-service,audit-service
+    simulation-allowed-callers: policy-service
+  kafka:
+    enabled: ${TRIGGER_KAFKA_ENABLED:false}
+    trigger-topic: platform.trigger.events
+    audit-topic: platform.audit.intake
+  rules:
+    min-simulation-seasons: 10
+    simulation-validity-days: 90
+    large-event-threshold: 100

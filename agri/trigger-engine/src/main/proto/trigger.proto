@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package trigger.v1;
+
+option java_multiple_files = true;
+option java_package = "com.umar.trigger.grpc.proto";
+option java_outer_classname = "TriggerProto";
+
+service TriggerService {
+  rpc GetDecisionStatus (GetDecisionStatusRequest) returns (GetDecisionStatusResponse);
+  rpc GetSimulationSummary (GetSimulationSummaryRequest) returns (GetSimulationSummaryResponse);
+}
+
+message PolicyWindowLookup {
+  string policy_id = 1;
+  string window_start = 2;
+  string window_end = 3;
+}
+
+message GetDecisionStatusRequest {
+  repeated string decision_ids = 1;
+  PolicyWindowLookup policy_window = 2;
+  string request_id = 3;
+}
+
+message DecisionStatusEntry {
+  string decision_id = 1;
+  string policy_id = 2;
+  string outcome = 3;
+  string status = 4;
+  string tier_id = 5;
+  double payout_percent = 6;
+  string evidence_hash = 7;
+  string decided_at = 8;
+}
+
+message GetDecisionStatusResponse {
+  repeated DecisionStatusEntry decisions = 1;
+  repeated string not_found_ids = 2;
+  string as_of = 3;
+}
+
+message GetSimulationSummaryRequest {
+  string simulation_id = 1;
+  string definition_hash = 2;
+  string request_id = 3;
+}
+
+message GetSimulationSummaryResponse {
+  bool valid = 1;
+  repeated string reasons = 2;
+  bool matches_definition = 3;
+  int32 seasons_covered = 4;
+  repeated string regions = 5;
+  double expected_loss_ratio = 6;
+  double burning_cost_percent = 7;
+  double data_coverage = 8;
+  string valid_until = 9;
+}

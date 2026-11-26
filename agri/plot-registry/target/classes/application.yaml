@@ -1,0 +1,69 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: plot-registry-service
+  datasource:
+    url: jdbc:postgresql://localhost:6001/plot_db?options=-c%20TimeZone=UTC
+    username: ${PLOT_DB_USERNAME:admin}
+    password: ${PLOT_DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: plot-registry-cg
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    com.umar: INFO
+
+plot:
+  security:
+    allow-header-identity: ${PLOT_ALLOW_HEADER_IDENTITY:true}
+    dev-fallback-enabled: ${PLOT_DEV_FALLBACK_ENABLED:true}
+    allowed-grpc-consumers:
+      - trigger-engine
+      - riskpool-service
+      - policy-service
+      - farmer-profile-service
+      - claims-service
+      - crop-health-ai
+      - yield-ai
+      - fraud-ai
+      - plot-registry-service
+    stream-consumers:
+      - trigger-engine
+      - riskpool-service
+  grpc:
+    enabled: ${PLOT_GRPC_ENABLED:true}
+    port: ${PLOT_GRPC_PORT:9083}
+  kafka:
+    enabled: ${PLOT_KAFKA_ENABLED:false}
+    outbox-enabled: ${PLOT_KAFKA_OUTBOX_ENABLED:false}
+    outbox-delay-ms: 5000
+    plot-topic: platform.plot.events
+    identity-topic: platform.identity.events
+  rules:
+    current-version: "2026.10.1"
+    min-area-ha: 0.25
+    max-area-ha: 50.0
+    min-width-m: 20.0
+    max-exclusion-percent: 5.0
+    cropland-validate-percent: 70.0
+    cropland-hold-percent: 50.0
+    overlap-ignore-percent: 5.0
+    overlap-review-percent: 10.0
+    overlap-duplicate-percent: 90.0
+    max-plots-per-farmer: 10
+    supported-countries: [KE, UG, TZ, RW, IN, GH, NG, ET]

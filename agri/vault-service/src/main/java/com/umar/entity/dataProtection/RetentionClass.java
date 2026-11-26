@@ -3,6 +3,7 @@ package com.umar.entity.dataProtection;
 import com.umar.enums.vault.LegalBasis;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,13 +15,14 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 public class RetentionClass {
 
     @Id
     private UUID id;
 
-    @Column(name = "CLASS_NAME")
+    @Column(name = "CLASS_NAME", unique = true)
     private String name;
 
     @Column(name = "GROUP_NAME")
@@ -36,4 +38,7 @@ public class RetentionClass {
     @Enumerated(EnumType.STRING)
     private LegalBasis legalBasis;
 
+    @Column(name = "STATUS")
+    @Builder.Default
+    private String status = "ACTIVE";
 }

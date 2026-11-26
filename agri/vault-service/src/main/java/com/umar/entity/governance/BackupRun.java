@@ -1,5 +1,6 @@
 package com.umar.entity.governance;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
@@ -22,7 +23,9 @@ public class BackupRun {
     @Id
     private UUID id;
 
-    private String  type;
+    private String type; // VERIFY | RESTORE_DRILL
+
+    private String status; // RUNNING | PASSED | FAILED
 
     private String backupSetIds;
 
@@ -30,7 +33,15 @@ public class BackupRun {
 
     private String rtoAchieved;
 
+    @Column(columnDefinition = "TEXT")
     private String findings;
+
+    @Column(columnDefinition = "TEXT")
+    private String detailsJson;
+
+    private String startedAt;
+
+    private String completedAt;
 
     private String destroyedAt;
 }

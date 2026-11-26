@@ -1,0 +1,39 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: policy-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/policy_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+policy:
+  grpc:
+    port: 9084
+    allowed-callers: trigger-engine,claims-service,payout-service,riskpool-service,farmer-profile,notification-service
+    internal-token: ${POLICY_GRPC_TOKEN:local-internal-service-token}
+  kafka:
+    enabled: false
+    policy-topic: platform.policy.events
+    identity-topic: platform.identity.events
+  rules:
+    quote-validity-hours: 72
+    backtest-min-seasons: 10
+    loss-ratio-min: 0.55
+    loss-ratio-max: 0.75
+    fallback-tariff-loading-percent: 5.0
+    cooling-off-days: 14
+    hold-expiry-days: 14
+    activation-retry-hours: 24

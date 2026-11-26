@@ -1,0 +1,86 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: integration-hub-service
+  datasource:
+    url: jdbc:postgresql://localhost:6001/hub_db?options=-c%20TimeZone=UTC
+    username: ${HUB_DB_USERNAME:admin}
+    password: ${HUB_DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: hub-dispatch-cg
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    com.umar: INFO
+
+hub:
+  auth:
+    allow-header-identity: ${HUB_ALLOW_HEADER_IDENTITY:true}
+    dev-fallback-enabled: ${HUB_DEV_FALLBACK_ENABLED:true}
+    require-mtls: ${HUB_REQUIRE_MTLS:false}
+  grpc:
+    enabled: ${HUB_GRPC_ENABLED:true}
+    port: ${HUB_GRPC_PORT:9089}
+    ssl:
+      enabled: ${HUB_GRPC_SSL_ENABLED:false}
+      cert-chain: ${HUB_GRPC_CERT:certs/server/hub-server.crt}
+      private-key: ${HUB_GRPC_KEY:certs/server/hub-server.key}
+      trust-cert: ${HUB_GRPC_CA:certs/ca/hub-ca.crt}
+  kafka:
+    enabled: ${HUB_KAFKA_ENABLED:false}
+    outbox-enabled: ${HUB_KAFKA_OUTBOX_ENABLED:false}
+    outbox-delay-ms: ${HUB_KAFKA_OUTBOX_DELAY_MS:5000}
+    integration-topic: platform.integration.events
+    identity-topic: identity.data-rights.events
+  vault:
+    mode: ${HUB_VAULT_MODE:local}
+    base-url: ${HUB_VAULT_URL:https://localhost:8443}
+    grpc-host: ${HUB_VAULT_GRPC_HOST:localhost}
+    grpc-port: ${HUB_VAULT_GRPC_PORT:9443}
+  webhook:
+    delivery-timeout-ms: 10000
+    challenge-timeout-ms: 5000
+    max-payload-bytes: 262144
+    retry-window-hours: 72
+    key-overlap-hours: 72
+    default-rate-limit-per-second: 20
+    auto-pause-success-threshold: 0.50
+    auto-pause-window-minutes: 60
+    replay-max-hours: 24
+    replay-max-events: 100000
+    replay-retention-days: 90
+    replay-jobs-per-day: 5
+    test-rate-limit-per-hour: 10
+    allowed-ports: [443, 8443]
+    allow-loopback-in-test: false
+  extension:
+    default-timeout-ms: 2000
+    max-sync-timeout-ms: 5000
+    max-memory-mb: 128
+    auto-disable-error-rate-percent: 20
+    auto-disable-window-minutes: 5
+    auto-disable-consecutive-failures: 20
+    kill-propagation-seconds: 10
+    normal-propagation-seconds: 30
+  quotas:
+    max-webhook-deliveries-per-month: 50000000
+    max-webhook-rate-per-second: 500
+    max-inbound-records-per-month: 50000000
+    max-extension-invocations-per-month: 50000000
+    max-subscriptions-per-partner: 50
+    max-connectors-per-partner: 25

@@ -1,0 +1,69 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: farmer-profile-service
+  datasource:
+    url: jdbc:postgresql://localhost:6001/farmer_db?options=-c%20TimeZone=UTC
+    username: ${FARMER_DB_USERNAME:admin}
+    password: ${FARMER_DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: farmer-profile-cg
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    com.umar: INFO
+
+farmer:
+  security:
+    allow-header-identity: ${FARMER_ALLOW_HEADER_IDENTITY:true}
+    dev-fallback-enabled: ${FARMER_DEV_FALLBACK_ENABLED:true}
+    hmac-secret: ${FARMER_HMAC_SECRET:AgriShieldFarmerHmacSecret2026!}
+    allowed-grpc-consumers:
+      - payout-service
+      - policy-service
+      - notification-service
+      - claims-service
+      - plot-registry
+      - advisory-bot
+      - farmer-profile-service
+    payout-destination-consumers:
+      - payout-service
+      - policy-service
+  grpc:
+    enabled: ${FARMER_GRPC_ENABLED:true}
+    port: ${FARMER_GRPC_PORT:9082}
+    ssl:
+      enabled: false
+  kafka:
+    enabled: ${FARMER_KAFKA_ENABLED:false}
+    outbox-enabled: ${FARMER_KAFKA_OUTBOX_ENABLED:false}
+    outbox-delay-ms: 5000
+    farmer-topic: platform.farmer.events
+    identity-topic: platform.identity.events
+  wallet:
+    max-per-farmer: 3
+    max-attempts-per-day: 3
+    name-match-verified-threshold: 0.90
+    name-match-review-threshold: 0.70
+    primary-cooling-off-hours: 24
+    new-device-cooling-off-hours: 48
+    supported-providers: [MPESA, MTN_MOMO, AIRTEL_MONEY, TIGO_PESA]
+  catalogue:
+    supported-languages: [en, sw, ki, lg, rw, hi, am]
+    supported-countries: [KE, UG, TZ, RW, IN, GH, NG, ET]
+    supported-crops: [MAIZE, BEANS, WHEAT, RICE, SORGHUM, MILLET, COFFEE, TEA, CASSAVA, COTTON]

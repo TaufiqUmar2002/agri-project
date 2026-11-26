@@ -1,0 +1,41 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: claims-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/claims_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: claims-service-cg
+      auto-offset-reset: earliest
+
+claims:
+  grpc:
+    port: 9087
+    service-token: ${CLAIMS_SERVICE_TOKEN:dev-internal-service-token}
+    allowed-callers: payout-service
+  kafka:
+    enabled: ${CLAIMS_KAFKA_ENABLED:false}
+    claim-topic: platform.claim.events
+  rules:
+    auto-approval-limit-minor: 100000
+    dual-approval-limit-minor: 200000
+    max-payout-attempts: 5
+    retry-cooldown-minutes: 10
+    dispute-window-days: 30
+    max-disputes-per-claim: 2

@@ -1,5 +1,6 @@
 package com.umar.entity.auditAndAccess;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
@@ -22,11 +23,16 @@ public class ViewLink {
     @Id
     private UUID id;
 
-    private String  documentToken;
+    private String documentToken;
 
     private String viewerRefHash;
 
+    private String viewerRole;
+
     private String sessionBinding;
+
+    @Column(name = "WATERMARK_TEXT")
+    private String watermarkText;
 
     private String expiresAt;
 

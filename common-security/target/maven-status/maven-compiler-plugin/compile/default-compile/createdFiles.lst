@@ -1,0 +1,7 @@
+com\umar\CommonSecurityApplication.class
+com\umar\security\SecurityConfigController.class
+com\umar\security\SecurityToggleService.class
+com\umar\security\AgreeShieldSecurityContext.class
+com\umar\security\CommonSecurityAutoConfiguration.class
+com\umar\security\CentralSecurityFilter.class
+com\umar\security\AgreeShieldPrincipal.class

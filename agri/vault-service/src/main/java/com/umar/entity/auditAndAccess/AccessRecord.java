@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
@@ -30,7 +29,7 @@ public class AccessRecord {
     private String dataClass;
 
     @Column(name = "SECRET_REF")
-    private String  secretRef;
+    private String secretRef;
 
     @Column(name = "PURPOSE")
     private String purpose;
@@ -42,16 +41,23 @@ public class AccessRecord {
     private String subjectHash;
 
     @Column(name = "COUNT")
-    private  String count;
+    private String count;
 
     @Column(name = "OUTCOME")
     private String outcome;
 
+    @Column(name = "REASON_CODE")
+    private String reasonCode;
+
+    @Column(name = "PREVIOUS_HASH")
+    private String previousHash;
+
     @Column(name = "RECORD_HASH", nullable = false)
-    private String  hash;
+    private String hash;
 
     @Column(name = "TIMESTAMP")
     private String timestamp;
 
-
+    @Column(name = "DAY_DATE")
+    private String dayDate;
 }

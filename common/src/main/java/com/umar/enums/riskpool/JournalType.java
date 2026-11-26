@@ -1,0 +1,5 @@
+package com.umar.enums.riskpool;
+
+public enum JournalType {
+    EXPENSE, COMMISSION, REINSURANCE_SETTLEMENT, SUBSIDY_RECEIPT, SPONSOR_RECEIPT, ADJUSTMENT, REVERSAL
+}

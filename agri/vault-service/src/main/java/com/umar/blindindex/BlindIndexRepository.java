@@ -59,4 +59,21 @@ public interface BlindIndexRepository
     int deleteByDataClassAndKeyVersion(
             @Param("dataClass") String dataClass,
             @Param("keyVersion") UUID keyVersion);
+
+    @Modifying
+    @Query("""
+        DELETE FROM BlindIndexEntry b
+        WHERE b.subjectRef = :subjectRef
+          AND b.dataClass IN :dataClasses
+        """)
+    int deleteBySubjectRefAndDataClassIn(
+            @Param("subjectRef") String subjectRef,
+            @Param("dataClasses") List<String> dataClasses);
+
+    @Modifying
+    @Query("""
+        DELETE FROM BlindIndexEntry b
+        WHERE b.subjectRef = :subjectRef
+        """)
+    int deleteBySubjectRef(@Param("subjectRef") String subjectRef);
 }

@@ -1,0 +1,27 @@
+server:
+  port: 0
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:plottest;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+
+plot:
+  security:
+    allow-header-identity: true
+    dev-fallback-enabled: false
+  grpc:
+    enabled: true
+    port: 0
+  kafka:
+    enabled: false
+    outbox-enabled: false
